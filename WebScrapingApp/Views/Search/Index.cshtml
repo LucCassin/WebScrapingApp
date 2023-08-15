@@ -1,43 +1,63 @@
 ﻿@model WebScrapingApp.Models.SearchResult
 
-@{
-    ViewData["Title"] = "Count Infotrack Appearances";
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - WebScrapingApp</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WebScrapingApp.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <div class="row mt-4">
+                <div class="col-md-6 offset-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h1 class="card-title">Count Infotrack Appearances</h1>
+                            <p>
+                                Click the button below to check how many times www.infotrack.co.uk appears in the search results.
+                            </p>
+                            <form asp-controller="Search" asp-action="Index" method="post">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="searchTerm" name="SearchTerm" value="@Model.SearchTerm" placeholder="Enter search term...">
+                                    <select class="form-select" id="selectedSearchEngine" name="SelectedSearchEngine">
+                                        <option value="Google">Google</option>
+                                        <option value="Bing">Bing</option>
+                                    </select>
+                                    <button type="submit" class="btn btn-primary">Search</button>
+                                </div>
+                            </form>
 
-<h1>Count Infotrack Appearances</h1>
-
-<p>
-    Click the button below to check how many times www.infotrack.co.uk appears in the search results.
-</p>
-
-<form asp-controller="Search" asp-action="Index" method="post">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" id="searchTerm" name="SearchTerm" value="@Model.SearchTerm" placeholder="Enter search term...">
-
-        <select class="form-control" id="selectedSearchEngine" name="SelectedSearchEngine">
-            <option value="Google">Google</option>
-            <option value="Bing">Bing</option>
-        </select>
-
-        <button type="submit" class="btn btn-primary">Search</button>
+                            @if (Model.InfotrackResults != null && Model.InfotrackResults.Count > 0)
+                            {
+                                <div class="alert alert-success" role="alert">
+                                    www.infotrack.co.uk appears <strong>@Model.InfotrackResults.Count</strong> times in the top 100 search results.
+                                </div>
+                                <ul class="list-group mt-3">
+                                    @foreach (var result in Model.InfotrackResults)
+                                    {
+                                        <li class="list-group-item">Position @result.Position</li>
+                                    }
+                                </ul>
+                            }
+                            else if (Model.InfotrackResults != null && Model.InfotrackResults.Count == 0)
+                            {
+                                <div class="alert alert-warning" role="alert">
+                                    www.infotrack.co.uk does not appear in the top 100 search results.
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-</form>
-
-@if (Model.InfotrackResults != null && Model.InfotrackResults.Count > 0)
-{
-    <div class="alert alert-success" role="alert">
-        www.infotrack.co.uk appears <strong>@Model.InfotrackResults.Count</strong> times in the top 100 search results.
-    </div>
-    <ul>
-        @foreach (var result in Model.InfotrackResults)
-        {
-            <li>Position @result.Position</li>
-        }
-    </ul>
-}
-else if (Model.InfotrackResults != null && Model.InfotrackResults.Count == 0)
-{
-    <div class="alert alert-warning" role="alert">
-        www.infotrack.co.uk does not appear in the top 100 search results.
-    </div>
-}
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+</body>
+</html>
