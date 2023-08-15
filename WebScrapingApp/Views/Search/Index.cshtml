@@ -17,15 +17,23 @@
     </div>
 </form>
 
-@if (Model.InfotrackCount.HasValue && Model.InfotrackCount.Value > 0)
+@if (Model.InfotrackResults != null && Model.InfotrackResults.Count > 0)
 {
     <div class="alert alert-success" role="alert">
-        www.infotrack.co.uk appears <strong>@Model.InfotrackCount</strong> times in the top 100 search results.
+        www.infotrack.co.uk appears <strong>@Model.InfotrackResults.Count</strong> times in the top 100 search results.
     </div>
+    <ul>
+        @foreach (var result in Model.InfotrackResults)
+        {
+            <li>Position <strong>@result.Position</strong></li>
+        }
+    </ul>
 }
-else if (Model.InfotrackCount.HasValue && Model.InfotrackCount.Value == 0)
+else if (Model.InfotrackResults != null && Model.InfotrackResults.Count == 0)
 {
     <div class="alert alert-warning" role="alert">
         www.infotrack.co.uk does not appear in the top 100 search results.
     </div>
 }
+
+
