@@ -1,0 +1,31 @@
+﻿@model WebScrapingApp.Models.SearchResult
+
+@{
+    ViewData["Title"] = "Count Infotrack Appearances";
+}
+
+<h1>Count Infotrack Appearances</h1>
+
+<p>
+    Click the button below to check how many times www.infotrack.co.uk appears in the search results.
+</p>
+
+<form asp-controller="Search" asp-action="Index" method="post">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="searchTerm" name="SearchTerm" value="@Model.SearchTerm" placeholder="Enter search term...">
+        <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+</form>
+
+@if (Model.InfotrackCount.HasValue && Model.InfotrackCount.Value > 0)
+{
+    <div class="alert alert-success" role="alert">
+        www.infotrack.co.uk appears <strong>@Model.InfotrackCount</strong> times in the top 100 search results.
+    </div>
+}
+else if (Model.InfotrackCount.HasValue && Model.InfotrackCount.Value == 0)
+{
+    <div class="alert alert-warning" role="alert">
+        www.infotrack.co.uk does not appear in the top 100 search results.
+    </div>
+}
