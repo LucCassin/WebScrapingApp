@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -27,7 +28,13 @@ namespace WebScrapingApp.Controllers
         {
             if (ModelState.IsValid)
             {
+
                 var httpClient = _httpClientFactory.CreateClient();
+                var cookieContainer = new CookieContainer();
+                var handler = new HttpClientHandler { CookieContainer = cookieContainer };
+                httpClient = new HttpClient(handler);
+
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36");
                 var searchUrl = $"https://www.google.co.uk/search?num=100&q={Uri.EscapeDataString(model.SearchTerm)}";
 
                 var response = await httpClient.GetAsync(searchUrl);
