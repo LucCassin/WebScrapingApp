@@ -13,6 +13,12 @@
 <form asp-controller="Search" asp-action="Index" method="post">
     <div class="input-group mb-3">
         <input type="text" class="form-control" id="searchTerm" name="SearchTerm" value="@Model.SearchTerm" placeholder="Enter search term...">
+
+        <select class="form-control" id="selectedSearchEngine" name="SelectedSearchEngine">
+            <option value="Google">Google</option>
+            <option value="Bing">Bing</option>
+        </select>
+
         <button type="submit" class="btn btn-primary">Search</button>
     </div>
 </form>
@@ -25,7 +31,7 @@
     <ul>
         @foreach (var result in Model.InfotrackResults)
         {
-            <li>Position <strong>@result.Position</strong></li>
+            <li>Position @result.Position</li>
         }
     </ul>
 }
@@ -35,5 +41,3 @@ else if (Model.InfotrackResults != null && Model.InfotrackResults.Count == 0)
         www.infotrack.co.uk does not appear in the top 100 search results.
     </div>
 }
-
-

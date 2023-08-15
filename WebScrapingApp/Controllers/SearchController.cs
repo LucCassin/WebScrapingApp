@@ -34,9 +34,9 @@ namespace WebScrapingApp.Controllers
 
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36");
 
-            var searchUrl = $"https://www.google.co.uk/search?num=100&q={Uri.EscapeDataString(model.SearchTerm)}";
+            var searchUrl = GetSearchUrl(model.SelectedSearchEngine, model.SearchTerm);
 
-            await Task.Delay(TimeSpan.FromSeconds(1)); // Need this delay to get past the google consent form
+            await Task.Delay(TimeSpan.FromSeconds(1)); // Need this delay to get past the consent form
 
             var response = await httpClient.GetAsync(searchUrl);
             var content = await response.Content.ReadAsStringAsync();
@@ -44,6 +44,19 @@ namespace WebScrapingApp.Controllers
             model.InfotrackResults = GetInfotrackResults(content);
 
             return View(model);
+        }
+
+        private string GetSearchUrl(SearchEngine searchEngine, string searchTerm)
+        {
+            switch (searchEngine)
+            {
+                case SearchEngine.Google:
+                    return $"https://www.google.co.uk/search?num=100&q={Uri.EscapeDataString(searchTerm)}";
+                case SearchEngine.Bing:
+                    return $"https://www.bing.com/search?count=100&q={Uri.EscapeDataString(searchTerm)}";
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(searchEngine), "Invalid search engine selected.");
+            }
         }
 
 
