@@ -17,13 +17,14 @@
                 <div class="col-md-6 offset-md-3">
                     <div class="card">
                         <div class="card-body">
-                            <h1 class="card-title">Count Infotrack Appearances</h1>
+                            <h1 class="card-title">InfoTrack WebScraper</h1>
                             <p>
-                                Click the button below to check how many times www.infotrack.co.uk appears in the search results.
+                                Click the button below to check how many times the entered URL appears when the entered search term is searched into the selected search engine and in what positions.
                             </p>
                             <form asp-controller="Search" asp-action="Index" method="post">
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" id="searchTerm" name="SearchTerm" value="@Model.SearchTerm" placeholder="Enter search term...">
+                                    <input type="text" class="form-control" id="searchUrl" name="SearchUrl" value="@Model.SearchUrl" placeholder="Enter URL...">
                                     <select class="form-select" id="selectedSearchEngine" name="SelectedSearchEngine">
                                         <option value="Google">Google</option>
                                         <option value="Bing">Bing</option>
@@ -32,22 +33,22 @@
                                 </div>
                             </form>
 
-                            @if (Model.InfotrackResults != null && Model.InfotrackResults.Count > 0)
+                            @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
                             {
                                 <div class="alert alert-success" role="alert">
-                                    www.infotrack.co.uk appears <strong>@Model.InfotrackResults.Count</strong> times in the top 100 search results.
+                                    The specified URL appears <strong>@Model.SearchResults.Count</strong> times in the top 100 search results.
                                 </div>
                                 <ul class="list-group mt-3">
-                                    @foreach (var result in Model.InfotrackResults)
+                                    @foreach (var result in Model.SearchResults)
                                     {
                                         <li class="list-group-item">Position @result.Position</li>
                                     }
                                 </ul>
                             }
-                            else if (Model.InfotrackResults != null && Model.InfotrackResults.Count == 0)
+                            else if (Model.SearchResults != null && Model.SearchResults.Count == 0)
                             {
                                 <div class="alert alert-warning" role="alert">
-                                    www.infotrack.co.uk does not appear in the top 100 search results.
+                                    The specified URL does not appear in the top 100 search results.
                                 </div>
                             }
                         </div>

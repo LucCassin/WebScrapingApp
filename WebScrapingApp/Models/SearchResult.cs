@@ -11,9 +11,11 @@ namespace WebScrapingApp.Models
     public class SearchResult
     {
         public string SearchTerm { get; set; }
+        public string SearchUrl { get; set; }
         public SearchEngine SelectedSearchEngine { get; set; }
-        public List<SearchResultItem> InfotrackResults { get; set; }
+        public List<SearchResultItem> SearchResults { get; set; }
     }
+
 
     public class SearchResultItem
     {

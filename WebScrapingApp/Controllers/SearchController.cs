@@ -35,13 +35,10 @@ namespace WebScrapingApp.Controllers
             httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36");
 
             var searchUrl = GetSearchUrl(model.SelectedSearchEngine, model.SearchTerm);
-
-            await Task.Delay(TimeSpan.FromSeconds(1)); // Need this delay to get past the consent form
-
             var response = await httpClient.GetAsync(searchUrl);
             var content = await response.Content.ReadAsStringAsync();
 
-            model.InfotrackResults = GetInfotrackResults(content);
+            model.SearchResults = GetSearchResults(content, model.SearchUrl);
 
             return View(model);
         }
@@ -59,10 +56,9 @@ namespace WebScrapingApp.Controllers
             }
         }
 
-
-        private List<SearchResultItem> GetInfotrackResults(string content)
+        private List<SearchResultItem> GetSearchResults(string content, string searchUrl)
         {
-            var infotrackResults = new List<SearchResultItem>();
+            var searchResults = new List<SearchResultItem>();
             var pattern = @"<cite.*?>(.*?)<\/cite>";
             var regex = new Regex(pattern, RegexOptions.IgnoreCase);
             var matches = regex.Matches(content);
@@ -72,17 +68,15 @@ namespace WebScrapingApp.Controllers
             foreach (Match match in matches)
             {
                 var result = match.Groups[1].Value;
-                if (result.Contains("www.infotrack.co.uk"))
+                if (result.Contains(searchUrl))
                 {
-                    infotrackResults.Add(new SearchResultItem { Position = position });
+                    searchResults.Add(new SearchResultItem { Position = position });
                 }
 
                 position++;
             }
 
-            return infotrackResults;
+            return searchResults;
         }
-
-
     }
 }
