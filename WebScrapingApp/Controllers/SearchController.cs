@@ -27,6 +27,13 @@ namespace WebScrapingApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Index(SearchResult model)
         {
+            var validationResult = ValidateInput(model);
+            if (!string.IsNullOrEmpty(validationResult))
+            {
+                ViewBag.ValidationError = validationResult;
+                return View(model);
+            }
+
             var httpClient = _httpClientFactory.CreateClient();
             var cookieContainer = new CookieContainer();
             var handler = new HttpClientHandler { CookieContainer = cookieContainer };
@@ -78,5 +85,32 @@ namespace WebScrapingApp.Controllers
 
             return searchResults;
         }
+
+        private string ValidateInput(SearchResult model)
+        {
+            if (string.IsNullOrWhiteSpace(model.SearchTerm))
+            {
+                return "Search term is required.";
+            }
+            else if (string.IsNullOrWhiteSpace(model.SearchUrl))
+            {
+                return "URL is required.";
+            }
+            else if (!IsValidUrl(model.SearchUrl))
+            {
+                return "Invalid URL.";
+            }
+
+            return null;
+        }
+
+        private bool IsValidUrl(string input)
+        {
+            // Regular expression pattern to validate URLs
+            string urlPattern = @"^www\.[\w\-]+\.(co(\.[a-z]{2,})?|com|edu|gov|mil|net|org|biz|info|mobi|name|aero|jobs|museum)$";
+
+            return Regex.IsMatch(input, urlPattern, RegexOptions.IgnoreCase);
+        }
+
     }
 }
