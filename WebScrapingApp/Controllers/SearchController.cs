@@ -34,8 +34,11 @@ namespace WebScrapingApp.Controllers
                 var handler = new HttpClientHandler { CookieContainer = cookieContainer };
                 httpClient = new HttpClient(handler);
 
-                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36");
+                httpClient.DefaultRequestHeaders.TryAddWithoutValidation("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36");
+
                 var searchUrl = $"https://www.google.co.uk/search?num=100&q={Uri.EscapeDataString(model.SearchTerm)}";
+
+                await Task.Delay(TimeSpan.FromSeconds(1)); // Need this delay to get past the google consent form
 
                 var response = await httpClient.GetAsync(searchUrl);
                 var content = await response.Content.ReadAsStringAsync();
