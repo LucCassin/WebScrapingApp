@@ -5,17 +5,18 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using WebScrapingApp.Models;
+using WebScrapingApp.Data;
 using System.Linq;
 
 namespace WebScrapingApp.Controllers
 {
     public class SearchController : Controller
     {
-        private readonly IHttpClientFactory _httpClientFactory;
+        private readonly AppDbContext _context;
 
-        public SearchController(IHttpClientFactory httpClientFactory)
+        public SearchController(AppDbContext context)
         {
-            _httpClientFactory = httpClientFactory;
+            _context = context;
         }
 
         public IActionResult Index()
@@ -34,7 +35,7 @@ namespace WebScrapingApp.Controllers
                 return View(model);
             }
 
-            var httpClient = _httpClientFactory.CreateClient();
+            var httpClient = new HttpClient();
             var cookieContainer = new CookieContainer();
             var handler = new HttpClientHandler { CookieContainer = cookieContainer };
             httpClient = new HttpClient(handler);
@@ -47,8 +48,23 @@ namespace WebScrapingApp.Controllers
 
             model.SearchResults = GetSearchResults(content, model.SearchUrl);
 
+            // Save the search result to the database
+            var searchRecord = new SearchRecord
+            {
+                SearchTerm = model.SearchTerm,
+                SearchUrl = model.SearchUrl,
+                SelectedSearchEngine = model.SelectedSearchEngine.ToString(),
+                PositionOfInitialOccurrence = (model.SearchResults.Count > 0) ? model.SearchResults[0].Position : 0,
+                DateSearched = DateTime.Now
+            };
+
+            _context.SearchRecords.Add(searchRecord);
+            await _context.SaveChangesAsync();
+
             return View(model);
         }
+
+
 
         private string GetSearchUrl(SearchEngine searchEngine, string searchTerm)
         {

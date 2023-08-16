@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebScrapingApp.Models
 {
@@ -10,8 +11,16 @@ namespace WebScrapingApp.Models
 
     public class SearchResult
     {
+        [Key]
+        public int SearchId { get; set; }
+
+        [Required]
         public string SearchTerm { get; set; }
+
+        [Required]
         public string SearchUrl { get; set; }
+
+        [Required]
         public SearchEngine SelectedSearchEngine { get; set; }
         public List<SearchResultItem> SearchResults { get; set; }
     }
@@ -19,6 +28,12 @@ namespace WebScrapingApp.Models
 
     public class SearchResultItem
     {
+        [Key]
+        public int PositionId { get; set; }
+
         public int Position { get; set; }
+
+        public int SearchId { get; set; }
+        public SearchResult SearchResult { get; set; }
     }
 }
