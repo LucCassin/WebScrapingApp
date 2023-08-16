@@ -25,12 +25,10 @@
                                 <div class="input-group mb-3">
                                     <input type="text" class="form-control" id="searchTerm" name="SearchTerm" value="@Model.SearchTerm" placeholder="Enter search term...">
                                     <input type="text" class="form-control" id="searchUrl" name="searchUrl" value="@Model.SearchUrl" placeholder="Enter URL...">
-
                                     <select class="form-select" id="selectedSearchEngine" name="SelectedSearchEngine">
                                         <option value="Google">Google</option>
                                         <option value="Bing">Bing</option>
                                     </select>
-
                                     <button type="submit" class="btn btn-primary">Search</button>
                                 </div>
 
@@ -45,7 +43,7 @@
                             @if (Model.SearchResults != null && Model.SearchResults.Count > 0)
                             {
                                 <div class="alert alert-success" role="alert">
-                                    The specified URL appears <strong>@Model.SearchResults.Count</strong> times in the top 100 search results.
+                                    The specified URL appears <strong>@Model.SearchResults.Count</strong> times in the top 100 search results of @(Model.SelectedSearchEngine.ToString()).
                                 </div>
                                 <ul class="list-group mt-3">
                                     @foreach (var result in Model.SearchResults)
