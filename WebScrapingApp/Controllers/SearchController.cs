@@ -48,7 +48,14 @@ namespace WebScrapingApp.Controllers
 
             model.SearchResults = GetSearchResults(content, model.SearchUrl);
 
-            // Save the search result to the database
+            // Save to database
+            await SaveSearchRecord(model);
+
+            return View(model);
+        }
+
+        private async Task SaveSearchRecord(SearchResult model)
+        {
             var searchRecord = new SearchRecord
             {
                 SearchTerm = model.SearchTerm,
@@ -59,12 +66,17 @@ namespace WebScrapingApp.Controllers
             };
 
             _context.SearchRecords.Add(searchRecord);
-            await _context.SaveChangesAsync();
 
-            return View(model);
+            try
+            {
+                await _context.SaveChangesAsync();
+                Console.WriteLine("SearchRecord saved successfully.");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while saving the SearchRecord: {ex}");
+            }
         }
-
-
 
         private string GetSearchUrl(SearchEngine searchEngine, string searchTerm)
         {
